@@ -6,4 +6,6 @@ Minitest::Reporters.use!
 
 class ActiveSupport::TestCase
   # Add more helper methods to be used by all tests here...
+  #fixtures :all
+  #include ApplicationHelper
 end
