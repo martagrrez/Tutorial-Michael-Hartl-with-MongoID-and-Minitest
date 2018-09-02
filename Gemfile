@@ -15,8 +15,13 @@ gem 'coffee-rails',            '4.2.2'
 gem 'jquery-rails',            '4.3.1'
 gem 'turbolinks',              '5.0.1'
 gem 'jbuilder',                '2.7.0'
-gem 'rails',          '5.1.6'
-gem 'bootstrap-sass', '3.3.7'
+gem 'rails',                    '5.1.6'
+gem 'bootstrap-sass',           '3.3.7'
+gem 'mongoid', '~> 7.0'
+gem 'bson_ext'
+gem "mongoid_rails_migrations"
+gem 'bcrypt',                   '3.1.12'
+
 
 group :development, :test do
   gem 'sqlite3', '1.3.13'
@@ -45,5 +50,5 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-gem 'mongoid'
+
 
