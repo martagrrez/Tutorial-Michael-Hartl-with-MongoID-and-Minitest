@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
+  
   def setup
     @user = User.new(name: "Example User", email: "user@example.com",
                         password: "foobar", password_confirmation: "foobar")
@@ -54,7 +55,7 @@ class UserTest < ActiveSupport::TestCase
   end
   
   test "password should be present (nonblank)" do
-    @user.password = @user.password_confirmation = " " * 6
+    @user.password = @user.password_confirmation = " " * 5
     assert_not @user.valid?
   end
 

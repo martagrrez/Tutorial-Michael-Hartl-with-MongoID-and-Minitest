@@ -1,7 +1,6 @@
 class User
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Attributes::Dynamic
   include ActiveModel::SecurePassword
   
   field :name, type: String
@@ -17,5 +16,12 @@ class User
                     uniqueness: { case_sensitive: false }
   
   has_secure_password
-  validates :password, presence: true, length: { minimum: 2 }
+  validates :password, presence: true, length: { minimum: 5 }, allow_nil: true
+  
+  # Returns the hash digest of the given string.
+  def User.digest(string)
+    cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
+                                                  BCrypt::Engine.cost
+    BCrypt::Password.create(string, cost: cost)
+  end
 end
