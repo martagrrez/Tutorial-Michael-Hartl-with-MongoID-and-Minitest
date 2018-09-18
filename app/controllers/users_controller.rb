@@ -7,13 +7,14 @@ class UsersController < ApplicationController
   # GET /users
   # GET /users.json
   def index
-    @users = User.paginate(page: params[:page])
+    @users = User.where(activated: true).paginate(page: params[:page])
   end
 
   # GET /users/1
   # GET /users/1.json
   def show
     @user = User.find(params[:id])
+    redirect_to root_url and return unless @user.activated
   end
 
   # GET /users/new
@@ -31,18 +32,17 @@ class UsersController < ApplicationController
   
   def create
     @user = User.new(user_params)
-
-    respond_to do |format|
       if @user.save
-        log_in @user
-        format.html { redirect_to @user, notice: 'User was successfully created' }
-        format.json { render :show, status: :created, location: @user }
-        flash[:success] = "Welcome to the Sample App!"
+        @user.send_activation_email
+        flash[:info] = "Please check your email to activate your account."
+        redirect_to root_url
+        #log_in @user
+        #format.html { redirect_to @user, notice: 'User was successfully created' }
+        #format.json { render :show, status: :created, location: @user }
+        #flash[:success] = "Welcome to the Sample App!"
       else
-        format.html { render :new }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+        render 'new'
       end
-    end
   end
   
   
@@ -95,5 +95,5 @@ class UsersController < ApplicationController
     def admin_user
       redirect_to(root_url) unless current_user.admin?
     end
-    
-end
+
+end #class UsersController
