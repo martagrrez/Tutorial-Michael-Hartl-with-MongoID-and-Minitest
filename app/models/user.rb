@@ -15,8 +15,11 @@ class User
   field :reset_digest, type: String
   field :reset_sent_at, type: DateTime
   
+  field :reset_digest, type: String
+  field :reset_sent_at, type: DateTime
   
-  attr_accessor :remember_token, :activation_token, :reset_token
+  
+  attr_accessor :remember_token, :activation_token, :reset_token, :reset_token
   before_save   :downcase_email
   before_create :create_activation_digest
   validates :name,  presence: true, length: { maximum: 50 }
@@ -78,7 +81,8 @@ class User
   # Sets the password reset attributes.
   def create_reset_digest
     self.reset_token = User.new_token
-    update_columns(reset_digest:  User.digest(reset_token), reset_sent_at: Time.zone.now)
+    update_attribute(:reset_digest,  User.digest(reset_token))
+    update_attribute(:reset_sent_at, Time.zone.now)
   end
   
   # Sends password reset email.
