@@ -3,6 +3,8 @@ class User
   include Mongoid::Timestamps
   include ActiveModel::SecurePassword
 
+  embeds_many :microposts
+
   
   field :name, type: String
   field :email, type: String
@@ -15,10 +17,8 @@ class User
   field :reset_digest, type: String
   field :reset_sent_at, type: DateTime
   
-  field :reset_digest, type: String
-  field :reset_sent_at, type: DateTime
   
-  
+
   attr_accessor :remember_token, :activation_token, :reset_token, :reset_token
   before_save   :downcase_email
   before_create :create_activation_digest
@@ -93,6 +93,12 @@ class User
   # Returns true if a password reset has expired.
   def password_reset_expired?
     reset_sent_at < 2.hours.ago
+  end
+  
+  # Defines a proto-feed.
+  # See "Following users" for the full implementation.
+  def feed
+    self.microposts.all
   end
   
   private

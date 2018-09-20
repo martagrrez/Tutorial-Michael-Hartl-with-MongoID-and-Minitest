@@ -21,6 +21,7 @@ gem 'mongoid', '~> 7.0'
 gem 'bson_ext'
 gem "mongoid_rails_migrations"
 gem 'bcrypt',                   '3.1.12'
+gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 
 
 group :development, :test do
