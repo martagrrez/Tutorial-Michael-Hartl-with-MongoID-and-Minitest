@@ -76,4 +76,47 @@ class UserTest < ActiveSupport::TestCase
     end
   end
   
+  test "should follow and unfollow a user" do
+    michael = User.create(name: "Michael Example", email: "michael@example.com", password: 'password', password_confirmation: 'password', admin: true, activated: true, activated_at: Time.zone.now)
+    archer = User.create(name: "Sterling Archer", email: "duchess@example.gov", password: 'password', password_confirmation: 'password', activated: true, activated_at: Time.zone.now)
+    assert_not michael.following?(archer)
+    michael.follow(archer)
+    assert michael.following?(archer)
+    assert archer.followers.include?(michael)
+    michael.unfollow(archer)
+    assert_not michael.following?(archer)
+    assert_not archer.followers.include?(michael)
+  end
+
+  # Revisar
+  test "feed should have the right posts" do
+    michael = User.create(name: "Michael Example", email: "michael@example.com", password: 'password', password_confirmation: 'password', admin: true, activated: true, activated_at: Time.zone.now)
+    michael.microposts.create(content: "Hola michael", created_at: Time.zone.now - 2.days)
+    archer = User.create(name: "Sterling Archer", email: "duchess@example.gov", password: 'password', password_confirmation: 'password', activated: true, activated_at: Time.zone.now)
+    archer.microposts.create(content: "Hola archer", created_at: Time.zone.now - 1.days)
+    lana = User.create(name: "Lana Kane", email: "hands@example.gov", password: 'password', password_confirmation: 'password', activated: true, activated_at: Time.zone.now)
+    lana.microposts.create(content: "Hola lana", created_at: Time.zone.now)
+    michael.follow(lana)
+    michael = michael.reload
+    archer = archer.reload
+    lana = lana.reload
+    # Posts from self
+    michael.microposts.each do |post_self|
+      assert michael.feed.include?(post_self)
+    end
+    # Posts from unfollowed user
+    archer.microposts.each do |post_unfollowed|
+      assert_not michael.feed.include?(post_unfollowed)
+    end
+    # Posts from followed user
+    lana.microposts.each do |post_following|
+      assert michael.feed.include?(post_following)
+    end
+    assert michael.feed[0] == lana.microposts.first
+    assert michael.feed[1] == michael.microposts.first
+  end
+  
+  def teardown
+    DatabaseCleaner.clean
+  end
 end

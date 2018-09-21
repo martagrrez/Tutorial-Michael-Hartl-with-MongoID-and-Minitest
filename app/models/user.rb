@@ -16,6 +16,8 @@ class User
   field :activated_at, type: DateTime
   field :reset_digest, type: String
   field :reset_sent_at, type: DateTime
+  has_and_belongs_to_many :following, class_name: 'User', inverse_of: :followers
+  has_and_belongs_to_many :followers, class_name: 'User', inverse_of: :following
   
   
 
@@ -24,12 +26,19 @@ class User
   before_create :create_activation_digest
   validates :name,  presence: true, length: { maximum: 50 }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-  validates :email, presence: true, length: { maximum: 255 },
-                    format: { with: VALID_EMAIL_REGEX },
-                    uniqueness: { case_sensitive: false }
+  validates :email, presence: true, length: { maximum: 255 }, format: { with: VALID_EMAIL_REGEX },uniqueness: { case_sensitive: false }
   
   has_secure_password
   validates :password, presence: true, length: { minimum: 5 }, allow_nil: true
+  
+
+  
+    # Defines a proto-feed.
+  # See "Following users" for the full implementation.
+  #def feed
+   # self.microposts.all
+  #end
+  
   
     # Returns the hash digest of the given string.
     def User.digest(string)
@@ -95,10 +104,31 @@ class User
     reset_sent_at < 2.hours.ago
   end
   
-  # Defines a proto-feed.
-  # See "Following users" for the full implementation.
+  
+  # Follows a user.
+  def follow(other_user)
+    self.following << other_user
+    other_user.followers << self
+  end
+
+  # Unfollows a user.
+  def unfollow(other_user)
+    self.following.delete(other_user)
+    other_user.followers.delete(self)
+  end
+
+  # Returns true if the current user is following the other user.
+  def following?(other_user)
+    self.following.include?(other_user)
+  end
+  
   def feed
-    self.microposts.all
+    posts = self.microposts
+    self.following.each do |user_follow|
+      posts = posts + user_follow.microposts
+    end
+    if posts.count >= 2 then posts = posts.sort { |x, y| y.created_at <=> x.created_at } end
+    return posts
   end
   
   private
@@ -113,6 +143,5 @@ class User
       self.activation_token  = User.new_token
       self.activation_digest = User.digest(activation_token)
     end
-
 
 end #class User
