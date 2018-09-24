@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class MicropostTest < ActiveSupport::TestCase
+  
   def setup
     @user = User.create(name: "Michael Example", email: "michael@example.com", password: 'password', password_confirmation: 'password', admin: true, activated: true, activated_at: Time.zone.now)
     @micropost = @user.microposts.build(content: "Lorem ipsum")

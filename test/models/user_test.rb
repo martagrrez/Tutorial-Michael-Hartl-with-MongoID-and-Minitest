@@ -3,8 +3,7 @@ require 'test_helper'
 class UserTest < ActiveSupport::TestCase
   
   def setup
-    @user = User.new(name: "Example User", email: "user@example.com",
-                        password: "foobar", password_confirmation: "foobar")
+    @user = User.new(name: "Example User", email: "user@example.com", password: "foobar", password_confirmation: "foobar")
   end
 
   test "should be valid" do
@@ -88,7 +87,7 @@ class UserTest < ActiveSupport::TestCase
     assert_not archer.followers.include?(michael)
   end
 
-  # Revisar
+  
   test "feed should have the right posts" do
     michael = User.create(name: "Michael Example", email: "michael@example.com", password: 'password', password_confirmation: 'password', admin: true, activated: true, activated_at: Time.zone.now)
     michael.microposts.create(content: "Hola michael", created_at: Time.zone.now - 2.days)
@@ -115,8 +114,5 @@ class UserTest < ActiveSupport::TestCase
     assert michael.feed[0] == lana.microposts.first
     assert michael.feed[1] == michael.microposts.first
   end
-  
-  def teardown
-    DatabaseCleaner.clean
-  end
+
 end

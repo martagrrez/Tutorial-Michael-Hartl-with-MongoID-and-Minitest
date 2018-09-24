@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class FollowingTest < ActionDispatch::IntegrationTest
+  
   def setup
     @user = User.create(name: "Michael Example", email: "michael@example.com", password: 'password', password_confirmation: 'password', admin: true, activated: true, activated_at: Time.zone.now)
     @other = User.create(name: "Sterling Archer", email: "duchess@example.gov", password: 'password', password_confirmation: 'password', activated: true, activated_at: Time.zone.now)
@@ -49,10 +50,6 @@ class FollowingTest < ActionDispatch::IntegrationTest
     assert_difference '@user.reload.following.count', -1 do
       delete unfollow_path, xhr: true, params: { user_id: @other.id }
     end
-  end
-  
-  def teardown
-    DatabaseCleaner.clean
   end
   
 end

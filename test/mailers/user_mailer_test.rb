@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class UserMailerTest < ActionMailer::TestCase
+  
   test "account_activation" do
     user = User.create(name: "Michael Example", email: "michael@example.com", password: 'password', password_confirmation: 'password', admin: true, activated: true, activated_at: Time.zone.now)
     user.activation_token = User.new_token
@@ -23,8 +24,5 @@ class UserMailerTest < ActionMailer::TestCase
     assert_match user.reset_token,        mail.body.encoded
     assert_match CGI.escape(user.email),  mail.body.encoded
   end
-  
-  def teardown
-    DatabaseCleaner.clean
-  end
+
 end

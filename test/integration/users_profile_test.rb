@@ -2,6 +2,7 @@ require 'test_helper'
 
 class UsersProfileTest < ActionDispatch::IntegrationTest
   include ApplicationHelper
+  
   def setup
     @user = User.create(name: "Michael Example", email: "michael@example.com", password: 'password', password_confirmation: 'password', admin: true, activated: true, activated_at: Time.zone.now)
   end

@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class UsersIndexTest < ActionDispatch::IntegrationTest
+  
   def setup
     @admin = User.create(name: "Michael Example", email: "michael@example.com", password: 'password', password_confirmation: 'password', admin: true)
     @non_admin = User.create(name: "Sterling Archer", email: "duchess@example.gov", password: 'password', password_confirmation: 'password')
@@ -28,5 +29,6 @@ class UsersIndexTest < ActionDispatch::IntegrationTest
     get users_path
     assert_select 'a', text: 'delete', count: 0
   end
+  
   
 end #classUsersIndexTest

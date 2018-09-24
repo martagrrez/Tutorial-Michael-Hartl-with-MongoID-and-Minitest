@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class MicropostsControllerTest < ActionDispatch::IntegrationTest
+  
   def setup
     @user = User.create(name: "Michael Example", email: "michael@example.com", password: 'password', password_confirmation: 'password', admin: true, activated: true, activated_at: Time.zone.now)
     @micropost = @user.microposts.create(content: "I just ate an orange!", created_at: 10.minutes.ago )
@@ -28,5 +29,6 @@ class MicropostsControllerTest < ActionDispatch::IntegrationTest
     end
     assert_redirected_to root_url
   end
+  
   
 end

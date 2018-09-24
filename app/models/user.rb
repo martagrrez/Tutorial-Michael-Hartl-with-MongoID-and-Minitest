@@ -32,14 +32,6 @@ class User
   validates :password, presence: true, length: { minimum: 5 }, allow_nil: true
   
 
-  
-    # Defines a proto-feed.
-  # See "Following users" for the full implementation.
-  #def feed
-   # self.microposts.all
-  #end
-  
-  
     # Returns the hash digest of the given string.
     def User.digest(string)
       cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
@@ -103,7 +95,6 @@ class User
   def password_reset_expired?
     reset_sent_at < 2.hours.ago
   end
-  
   
   # Follows a user.
   def follow(other_user)
